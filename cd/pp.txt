@@ -1,0 +1,154 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+#include<stdlib.h>
+void push(char);
+void pop();
+void display();
+void inpdis();
+char input[20],stk[30];
+int ip=0,top=-1;
+void push(char c)
+{
+    if(top>=20)
+    {
+      printf("Stack Overflow");
+      exit(0);
+    }
+   else
+   {
+     top++;
+     stk[top]=c;//require change
+   }
+}
+void pop()
+{
+ if(top==-1)
+ {
+  printf("underflow");
+  exit(0);
+ }
+ else
+ {
+  top--;
+ }
+}
+void display()
+{
+int i;
+for(int i=0;i<=top;i++)
+  printf("%c",stk[i]);
+}
+void inpdis()
+{
+    int i;
+    i = ip;
+ while(input[i]!='\0')
+ {
+   printf("%c",input[i]);
+   i++;
+ }
+}
+
+void main()
+{
+    int flag = 0;
+    printf("\nEnter the input with $:\n");
+    scanf("%s",input);
+    push('$');
+    push('E');
+    printf("Stack contents                           input data");
+    while(1)
+    {
+        printf("\n");
+        display();
+        printf("--------------------");
+        inpdis();
+        if(stk[top]=='$' && input[ip]=='$')
+        {
+            flag=1;
+            printf("success");
+            break;
+        }
+        else if(stk[top]==input[ip])
+        {
+            ip++;
+            pop();
+        }
+        else if(stk[top]=='E')
+        {
+            if(input[ip]=='i'||'(')
+            {
+                pop();
+                push('A');
+                push('T');
+            }
+            else
+                break;
+        }
+        else if(stk[top]=='A') 
+        {
+            if(input[ip]=='+')
+            {
+                pop();
+                push('A');
+                push('T');
+                push('+');
+            }
+            else if(input[ip]==')'||'$')
+            {
+                pop();
+            }
+            else
+                break;
+        }
+        else if(stk[top]=='T') 
+        {
+            if(input[ip]=='i'||'$')//changed
+            {
+                pop();
+                push('B');
+                push('F');
+            }
+            else
+                break;
+        }
+        else if(stk[top]=='B')
+        {
+            if(input[ip]=='*')
+            {
+                pop();
+                push('B');
+                push('F');
+                push('*');
+            }
+            else if(input[ip]=='+'||')'||'$')
+            {
+                pop();
+            }
+            else
+                break;
+        }
+        else if(stk[top]=='F')
+        {
+            if(input[ip]=='i')
+            {
+                pop();
+                push('i');
+            }
+            else if(input[ip]=='(')
+            {
+                pop();
+                push(')');
+                push('E');
+                push('(');
+            }
+            else
+                break;
+        }
+        else
+                break;
+    }
+    if(flag==0)
+        printf("inavlid input");
+}
